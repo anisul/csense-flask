@@ -139,3 +139,7 @@
 }
 
 #map {width:100%; height:100%;}
+
+.event-list-container {
+    margin-top: 20px;
+}
