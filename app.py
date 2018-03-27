@@ -81,6 +81,11 @@ def get_device():
         status = "all"
     return db.getDevice(deviceName, status), 200, {'Content-Type': 'application/json'}
 
+@app.route('/checkDevice', methods=['POST'])
+def check_device():
+    deviceName = request.json['device_mac']
+    return db.checkDevice(deviceName), 200, {'Content-Type': 'application/json'}
+
 @app.route('/saveDevice', methods=['POST'])
 def save_Device():
     device_id = request.json['device_id']
@@ -95,6 +100,34 @@ def update_Device():
     device_id = request.json['device_id']
     status = request.json['status']
     return db.updateDevice(device_id, status), 200, {'Content-Type': 'application/json'}
+
+@app.route('/saveUser', methods=['POST'])
+def save_User():
+    username = request.json['username']
+    password = request.json['password']
+    name = request.json['name']
+    position = request.json['position']
+    if username != None and password != None:
+        return db.saveUser(username, password, name, position), 200, {'Content-Type': 'application/json'}
+    else:
+        return {"status":"Failed to save user as data is incomplete!"}
+
+@app.route('/validateUser', methods=['POST'])
+def validate_User():
+    username = request.json['username']
+    password = request.json['password']
+    if username != None and password != None:
+        return db.validateUser(username, password), 200, {'Content-Type': 'application/json'}
+    else:
+        return {"status":"Failed to validate user as data is incomplete!"}
+
+@app.route('/getUserInfo', methods=['POST'])
+def get_user():
+    username = request.json['username']
+    if username != None and password != None:
+        return db.getUserInfo(username), 200, {'Content-Type': 'application/json'}
+    else:
+        return {"status":"Failed to validate user as data is incomplete!"}
 
 if __name__ == "__main__":
     app.run()

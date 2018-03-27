@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-function IndexController($scope, $http) {
+function IndexController($scope, $http, $timeout) {
     $scope.events = {};
 
     $scope.deviceId = "";
@@ -59,11 +59,13 @@ function IndexController($scope, $http) {
         function errorCallback(error){
             //error code
         }
-    }();
+    };
+
+    $scope.loadEvents();
         
     $scope.search = function () {
         $scope.loadEvents();
-    }
+    };
 
     $scope.zoomToIncludeMarkers = function() {
         var bounds = new google.maps.LatLngBounds();
@@ -74,10 +76,87 @@ function IndexController($scope, $http) {
         $scope.map.fitBounds(bounds);
         $scope.map.setZoom(13);
     };
+
+    $scope.refreshSlider = function () {
+        $timeout(function () {
+            $scope.$broadcast('rzSliderForceRender');
+        });
+    };
+
+    $scope.onSelectorSliderChange = function () {
+        $scope.refreshSlider();
+        var now = moment().format("YYYYMMDD");
+        prepareDateRange ($scope.selectorSlider.value, $scope.slider.value);
+
+        $scope.loadEvents();
+    };
+
+    var prepareDateRange = function (selector, subSelector) {
+        var now = moment();
+        $scope.fromDate = now.format("YYYYMMDDhhmmss");
+
+        if (selector === 'Day') {
+            $scope.toDate = now.subtract(subSelector, 'days').format("YYYYMMDDhhmmss");
+
+            console.log("DAY");
+            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+        } else if (selector === 'Week') {
+            $scope.toDate = now.subtract(subSelector, 'weeks').startOf('isoWeek').format("YYYYMMDDhhmmss");
+
+            console.log("WEEK");
+            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+        } else {
+            $scope.toDate = now.subtract(subSelector, 'months').format("YYYYMMDDhhmmss");
+
+            console.log("MONTH");
+            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+        }
+    };
+
+    $scope.selectorSlider = {
+        value: 'Day',
+        options: {
+            showTicksValues: true,
+            stepsArray: [
+                {value: 'Day'},
+                {value: 'Week'},
+                {value: 'Month'}
+            ],
+            onEnd: $scope.onSelectorSliderChange
+        }
+    };
+
+    $scope.slider = {
+        value: 4,
+        options: {
+            floor: 1,
+            ceil: 10,
+            step: 1,
+            showTicks: true,
+            translate: function(value) {
+                if ($scope.selectorSlider.value === 'Day') {
+                    return value > 1 ?  value + ' days ago' : value + ' day ago';
+                } else if ($scope.selectorSlider.value === 'Week') {
+                    return value > 1 ?  value + ' weeks ago' : value + ' week ago';
+                } else {
+                    return value > 1 ?  value + ' months ago' : value + ' month ago';
+                }
+            },
+            onEnd: $scope.onSelectorSliderChange
+        }
+    };
 }
 
 function AboutController($scope, $http) {
-
+    $scope.priceSlider = {
+        value: 20,
+        options: {
+            floor: 0,
+            ceil: 100,
+            step: 10,
+            showTicks: true
+        }
+    }
 }
 
 function DevicesController($scope, $http, $location) {
