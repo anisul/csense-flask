@@ -24,6 +24,12 @@
 
 
         <div class="col-md-3">
+            <br/>
+            <br/>
+            <div ng-show="!events.length && !pageLoading">
+                <div class="alert alert-info" role="alert">Currently there is no event to show.</div>
+            </div>
+
             <div class="event-list-container">
                 <div class="list-group">
                     <a href="#" class="list-group-item" ng-repeat="event in events">

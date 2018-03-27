@@ -13,6 +13,7 @@ function IndexController($scope, $http, $timeout) {
     $scope.changedDate = "";
     $scope.changedBy = "";
     $scope.eventType = "";
+    $scope.pageLoading = false;
 
     var data = {
         "device_id" : $scope.deviceId,
@@ -26,6 +27,8 @@ function IndexController($scope, $http, $timeout) {
     };
 
     $scope.loadEvents = function () {
+        $scope.pageLoading = true;
+
         var data = {};
 
         data.device_id = $scope.deviceId;
@@ -54,6 +57,7 @@ function IndexController($scope, $http, $timeout) {
             }
 
             $scope.zoomToIncludeMarkers();
+            $scope.pageLoading = false;
         }
 
         function errorCallback(error){
@@ -69,10 +73,18 @@ function IndexController($scope, $http, $timeout) {
 
     $scope.zoomToIncludeMarkers = function() {
         var bounds = new google.maps.LatLngBounds();
-        $scope.events.forEach(function(c) {
-            var latLng = new google.maps.LatLng(c.pos[0],c.pos[1]);
+
+        if ($scope.events.length) {
+            $scope.events.forEach(function(c) {
+                var latLng = new google.maps.LatLng(c.pos[0],c.pos[1]);
+                bounds.extend(latLng);
+            });
+        } else {
+            //zoom and scale the map to center of Lappeenranta when no events there
+            var latLng = new google.maps.LatLng("61.050666", "28.160306");
             bounds.extend(latLng);
-        });
+        }
+
         $scope.map.fitBounds(bounds);
         $scope.map.setZoom(13);
     };
@@ -93,23 +105,28 @@ function IndexController($scope, $http, $timeout) {
 
     var prepareDateRange = function (selector, subSelector) {
         var now = moment();
-        $scope.fromDate = now.format("YYYYMMDDhhmmss");
+        $scope.toDate = now.format("YYYYMMDDhhmmss");
 
-        if (selector === 'Day') {
-            $scope.toDate = now.subtract(subSelector, 'days').format("YYYYMMDDhhmmss");
+        if (subSelector !== 1) {
+            if (selector === 'Day') {
+                $scope.fromDate = now.subtract(subSelector, 'days').format("YYYYMMDDhhmmss");
 
-            console.log("DAY");
-            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
-        } else if (selector === 'Week') {
-            $scope.toDate = now.subtract(subSelector, 'weeks').startOf('isoWeek').format("YYYYMMDDhhmmss");
+                console.log("DAY");
+                console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+            } else if (selector === 'Week') {
+                $scope.fromDate = now.subtract(subSelector, 'weeks').startOf('isoWeek').format("YYYYMMDDhhmmss");
 
-            console.log("WEEK");
-            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+                console.log("WEEK");
+                console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+            } else {
+                $scope.fromDate = now.subtract(subSelector, 'months').format("YYYYMMDDhhmmss");
+
+                console.log("MONTH");
+                console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+            }
         } else {
-            $scope.toDate = now.subtract(subSelector, 'months').format("YYYYMMDDhhmmss");
-
-            console.log("MONTH");
-            console.log("from: " + $scope.fromDate + " ---- " + "to: " + $scope.toDate);
+            $scope.toDate = "";
+            $scope.fromDate = "";
         }
     };
 
@@ -127,7 +144,7 @@ function IndexController($scope, $http, $timeout) {
     };
 
     $scope.slider = {
-        value: 4,
+        value: 1,
         options: {
             floor: 1,
             ceil: 10,
@@ -135,11 +152,11 @@ function IndexController($scope, $http, $timeout) {
             showTicks: true,
             translate: function(value) {
                 if ($scope.selectorSlider.value === 'Day') {
-                    return value > 1 ?  value + ' days ago' : value + ' day ago';
+                    return value > 1 ?  value + ' days' : 'now';
                 } else if ($scope.selectorSlider.value === 'Week') {
-                    return value > 1 ?  value + ' weeks ago' : value + ' week ago';
+                    return value > 1 ?  value + ' weeks' : 'now';
                 } else {
-                    return value > 1 ?  value + ' months ago' : value + ' month ago';
+                    return value > 1 ?  value + ' months' : 'now';
                 }
             },
             onEnd: $scope.onSelectorSliderChange
