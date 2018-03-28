@@ -5,6 +5,8 @@
 function IndexController($scope, $http, $timeout) {
     $scope.events = {};
 
+    $scope.myDeviceId = "";
+
     $scope.deviceId = "";
     $scope.eventId = "";
     $scope.fromDate = "";
@@ -162,18 +164,19 @@ function IndexController($scope, $http, $timeout) {
             onEnd: $scope.onSelectorSliderChange
         }
     };
+
+    $scope.searchMyEvent = function () {
+        $scope.deviceId = $scope.myDeviceId;
+        $scope.loadEvents();
+    };
 }
 
 function AboutController($scope, $http) {
-    $scope.priceSlider = {
-        value: 20,
-        options: {
-            floor: 0,
-            ceil: 100,
-            step: 10,
-            showTicks: true
-        }
-    }
+
+}
+
+function HelpController($scope, $http) {
+
 }
 
 function DevicesController($scope, $http, $location) {

@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('CsenseFlask', ['csenseFlaskServices', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize']);
+var app = angular.module('CsenseFlask', ['csenseFlaskServices', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
 
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider
@@ -11,6 +11,10 @@ app.config(function ($routeProvider, $locationProvider) {
         .when('/about', {
             templateUrl: 'static/partials/about.html',
             controller: AboutController
+        })
+        .when('/help', {
+            templateUrl: 'static/partials/help.html',
+            controller: HelpController
         })
         .when('/devices', {
             templateUrl: 'static/partials/devices.html',
