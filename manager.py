@@ -19,6 +19,7 @@ class DatabaseManager:
 
     def getEvent(self, event_id, deviceName, fromDate, toDate, status, changeDate, changeBy, event_type):
         data = mongo.event
+        deviceData = mongo.device
         today = datetime.today()
         output = []
         query = {}
@@ -27,7 +28,12 @@ class DatabaseManager:
         if event_type != "all" :
             query['event_type'] = event_type
         if deviceName != "all" :
-            query['event_device_id'] = deviceName
+            getDeviceMac = deviceData.find_one({"device_id":deviceName})
+            if getDeviceMac:
+                deviceMac = getDeviceMac['device_mac']
+                query['event_device_id'] = deviceMac
+            else:
+                query['event_device_id'] = deviceName
         if fromDate != "all" and toDate != "all" :
             fromDate = parser.parse(fromDate)
             toDate = parser.parse(toDate)

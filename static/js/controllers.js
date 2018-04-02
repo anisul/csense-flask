@@ -154,11 +154,11 @@ function IndexController($scope, $http, $timeout) {
             showTicks: true,
             translate: function(value) {
                 if ($scope.selectorSlider.value === 'Day') {
-                    return value > 1 ?  value + ' days' : 'now';
+                    return value > 1 ?  value + ' days' : 'all';
                 } else if ($scope.selectorSlider.value === 'Week') {
-                    return value > 1 ?  value + ' weeks' : 'now';
+                    return value > 1 ?  value + ' weeks' : 'all';
                 } else {
-                    return value > 1 ?  value + ' months' : 'now';
+                    return value > 1 ?  value + ' months' : 'all';
                 }
             },
             onEnd: $scope.onSelectorSliderChange
