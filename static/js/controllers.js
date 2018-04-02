@@ -2,6 +2,12 @@
 
 /* Controllers */
 
+function LoginController($scope, $http) {
+
+}
+
+
+
 function IndexController($scope, $http, $timeout) {
     $scope.events = {};
 

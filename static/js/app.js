@@ -8,6 +8,10 @@ app.config(function ($routeProvider, $locationProvider) {
             templateUrl: 'static/partials/landing.html',
             controller: IndexController
         })
+        .when('/login', {
+            templateUrl: 'static/partials/login.html',
+            controller: LoginController
+        })
         .when('/about', {
             templateUrl: 'static/partials/about.html',
             controller: AboutController
