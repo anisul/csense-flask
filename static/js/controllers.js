@@ -6,7 +6,151 @@ function LoginController($scope, $http) {
 
 }
 
+function ManageEventsController($scope, $http) {
+    $scope.events = {};
 
+    $scope.myDeviceId = "";
+
+    $scope.deviceId = "";
+    $scope.eventId = "";
+    $scope.fromDate = "";
+    $scope.toDate = "";
+    $scope.status = "";
+    $scope.changedDate = "";
+    $scope.changedBy = "";
+    $scope.eventType = "";
+    $scope.pageLoading = false;
+
+    var data = {
+        "device_id" : $scope.deviceId,
+        "event_id": $scope.eventId,
+        "fromDate": $scope.fromDate,
+        "toDate": $scope.toDate,
+        "status": $scope.status,
+        "changedDate": $scope.changedDate,
+        "changedBy": $scope.changedBy,
+        "event_type": $scope.eventType
+    };
+
+    $scope.loadEvents = function () {
+        $scope.pageLoading = true;
+
+        var data = {};
+
+        data.device_id = $scope.deviceId;
+        data.event_id = $scope.eventId;
+        data.fromDate = $scope.fromDate;
+        data.toDate = $scope.toDate;
+        data.status = $scope.status;
+        data.changedDate = $scope.changedDate;
+        data.changedBy = $scope.changedBy;
+        data.event_type = $scope.eventType;
+
+        $http({
+            method: "POST",
+            url: "/getEvent",
+            data: data
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            $scope.events = response.data.result;
+
+            for (var i = 0; i < $scope.events.length; i++) {
+                var position = [];
+                position.push($scope.events[i].latitude);
+                position.push($scope.events[i].longitude);
+                $scope.events[i].pos = position;
+            }
+
+            $scope.pageLoading = false;
+        }
+
+        function errorCallback(error){
+            //error code
+        }
+    };
+
+    $scope.loadEvents();
+
+    $scope.search = function () {
+        $scope.loadEvents();
+    };
+}
+
+function ManageEventController($scope, $http, $routeParams, $location, $timeout) {
+    $scope.deviceId = "";
+    $scope.eventId = $routeParams.id;
+    $scope.fromDate = "";
+    $scope.toDate = "";
+    $scope.status = "";
+    $scope.changedDate = "";
+    $scope.changedBy = "";
+    $scope.eventType = "";
+
+    $scope.pageLoading = false;
+
+    var data = {
+        "device_id" : $scope.deviceId,
+        "event_id": $scope.eventId,
+        "fromDate": $scope.fromDate,
+        "toDate": $scope.toDate,
+        "status": $scope.status,
+        "changedDate": $scope.changedDate,
+        "changedBy": $scope.changedBy,
+        "event_type": $scope.eventType
+    };
+
+    var loadEvent = function () {
+        $scope.pageLoading = true;
+
+        var data = {};
+
+        data.device_id = $scope.deviceId;
+        data.event_id = $scope.eventId;
+        data.fromDate = $scope.fromDate;
+        data.toDate = $scope.toDate;
+        data.status = $scope.status;
+        data.changedDate = $scope.changedDate;
+        data.changedBy = $scope.changedBy;
+        data.event_type = $scope.eventType;
+
+        $http({
+            method: "POST",
+            url: "/getEvent",
+            data: data
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            $scope.event = response.data.result[0];
+
+            var position = [];
+            position.push($scope.event.latitude);
+            position.push($scope.event.longitude);
+            $scope.event.pos = position;
+
+            $scope.zoomToIncludeMarker($scope.event.pos[0], $scope.event.pos[1]);
+            $scope.pageLoading = false;
+        }
+
+        function errorCallback(error){
+            //error code
+        }
+    }();
+
+    $scope.zoomToIncludeMarker = function(lat, lng) {
+        var bounds = new google.maps.LatLngBounds();
+
+        var latLng = new google.maps.LatLng(lat,lng);
+        bounds.extend(latLng);
+
+        $scope.map.fitBounds(bounds);
+        $scope.map.setZoom(14);
+    };
+}
+
+function UsersController($scope, $http) {
+
+}
 
 function IndexController($scope, $http, $timeout) {
     $scope.events = {};

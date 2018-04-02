@@ -12,6 +12,18 @@ app.config(function ($routeProvider, $locationProvider) {
             templateUrl: 'static/partials/login.html',
             controller: LoginController
         })
+        .when('/manage-events', {
+            templateUrl: 'static/partials/manage-events.html',
+            controller: ManageEventsController
+        })
+        .when('/manage-event/:id', {
+            templateUrl: 'static/partials/manage-event.html',
+            controller: ManageEventController
+        })
+        .when('/users', {
+            templateUrl: 'static/partials/users.html',
+            controller: UsersController
+        })
         .when('/about', {
             templateUrl: 'static/partials/about.html',
             controller: AboutController

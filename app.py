@@ -16,6 +16,7 @@ db = DatabaseManager()
 @app.route('/')
 @app.route('/about')
 @app.route('/devices')
+@app.route('/manage-events')
 @app.route('/login')
 def basic_pages(**kwargs):
     return make_response(open('templates/index.html').read())

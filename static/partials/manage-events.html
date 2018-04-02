@@ -1,0 +1,72 @@
+<div class="container">
+    <h2>Events</h2>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="filter-panel" class="filter-panel">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form">
+                            <div class="form-group" style="margin-right: 20px;">
+                                <label class="filter-col" for="eventStatus">Event Status:</label>
+                                <select id="eventStatus" class="form-control">
+                                    <option>Active</option>
+                                    <option>Resolved</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="filter-col" for="eventType">Event Type:</label>
+                                <select id="eventType" class="form-control">
+                                    <option>Smell</option>
+                                    <option>Noise</option>
+                                    <option>Algae</option>
+                                    <option>Lake</option>
+                                    <option>Alien Species</option>
+                                </select>
+                            </div> <!-- form group [order by] -->
+                            <div class="form-group pull-right">
+                                <button type="submit" class="btn btn-default">
+                                    Filter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="pull-right text-muted"><small>Total: {{events.length}}</small></div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th class="col-md-2"><span>Event ID</span></th>
+                <th class="col-md-2"><span>Location</span></th>
+                <th class="col-md-1"><span>Status</span></th>
+                <th class="col-md-1"><span>Type</span></th>
+                <th class="col-md-2"><span>Date Created</span></th>
+                <th class="col-md-1"><span></span></th>
+                <th class="col-md-1"><span></span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="event in events">
+                <td>{{event.event_id}}</td>
+                <td>{{event.latitude}}, {{event.longitude}}</td>
+                <td></td>
+                <td></td>
+                <td>{{event.event_date_time}}</td>
+                <td><a href="/manage-event/{{event.event_id}}" class="btn btn-default pull-right">Details</a></td>
+                <td><a href="#" class="btn btn-primary">Resolve</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
