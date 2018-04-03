@@ -45,20 +45,20 @@ class DatabaseManager:
         if changeBy != "all" :
             query['event_updated_by'] = changeBy
         for q in data.find(query):
-            output.append({'latitude':q['event_latitude'],'longitude':q['event_longitude'],'event_date_time':q['event_date_time'],'event_id':q['event_id']})
+            output.append({'device_id':q['event_device_id'],'event_type':q['event_type'],'event_status':q['event_status'],'latitude':q['event_latitude'],'longitude':q['event_longitude'],'event_date_time':q['event_date_time'],'event_id':q['event_id']})
         return jsonify({'status':'success','result':output, 'query':query})
 
     def saveEvent(self, device_id, latitude, longitude, value):
         data = mongo.event
         #currTime = datetime.now()
-        currTime = datetime.today()
+        currTime = datetime.today() + timedelta(hours=3)
         device = mongo.device
         unique_id = str(uuid.uuid4())
         check_device = device.find_one({'device_mac':device_id})
         if check_device['status'] == 'active' :
             save_id = data.insert({'event_id':unique_id,'event_device_id': device_id, 'event_latitude':latitude, 'event_longitude' : longitude, 'event_type' : value, 'event_date_time':currTime,'event_status':'new','event_updated_by':'','event_date_updated':''})
             new_data = data.find_one({'_id' : save_id})
-            output = {'device_id':check_device['status'],'name' : new_data['event_device_id'], 'value':new_data['event_type']}
+            output = {'device_id':check_device['status'],'name' : new_data['event_device_id'], 'value':new_data['event_type'],'time':currTime}
         else:
             output = {"device_id":"Device not registered or inactive! Please register device and try again."}
         return jsonify({'status':'success', 'result':output})
@@ -69,6 +69,31 @@ class DatabaseManager:
         update_id = data.update({"event_id":event_id}, {'$set': {"event_status":status, "event_updated_by":updated_by, "event_date_updated": currTime}})
         new_data = data.find_one({'event_id' : event_id})
         output = {'name' : new_data['event_device_id'], 'value':new_data['event_type']}
+        return jsonify({'status':'success', 'result':output})
+
+    def getEventTypes(self):
+        data = mongo.types
+        output = []
+        for q in data.find({}):
+            output.append(q['event_name']+"#"+q['event_details'])
+        return jsonify({'status':'success','result':output})
+
+    def saveEvent(self, device_id, latitude, longitude, value):
+        data = mongo.event
+        #currTime = datetime.now()
+        currTime = datetime.today() + timedelta(hours=3)
+        device = mongo.device
+        unique_id = str(uuid.uuid4())
+        check_device = device.find_one({'device_mac':device_id})
+        if check_device:
+            if check_device['status'] == 'active' :
+                save_id = data.insert({'event_id':unique_id,'event_device_id': device_id, 'event_latitude':latitude, 'event_longitude' : longitude, 'event_type' : value, 'event_date_time':currTime,'event_status':'new','event_updated_by':'','event_date_updated':''})
+                new_data = data.find_one({'_id' : save_id})
+                output = {'event_id' : new_data['event_id'], 'value':new_data['event_type'],'time':currTime}
+            else:
+                return jsonify({"device_id":"Device is not active. Please contact admin", 'status':'failed'})
+        else:
+            return jsonify({"device_id":"Device not registered or inactive! Please register device and try again.", "status":"failed"})
         return jsonify({'status':'success', 'result':output})
 
     def getDevice(self, deviceName, status):
@@ -87,8 +112,9 @@ class DatabaseManager:
         data = mongo.device
         query = {}
         query['device_mac'] = deviceMac
-        if data.find_one(query):
-            return jsonify({'status':'success', 'device':'found'})
+        check = data.find_one(query)
+        if check:
+            return jsonify({'status':'success', 'device':'found', 'device_id':check['device_id']})
         else:
             return jsonify({'status':'success', 'device':'not found'})
 
@@ -136,9 +162,9 @@ class DatabaseManager:
         pwd = password + username
         encpassword = hashlib.md5(pwd.encode('utf-8')).hexdigest()
         if data.find_one({'username': username, 'password':encpassword, 'status':'active'}):
-            return jsonify({'status':'success', 'result':'validated'})
+            return "true"
         else:
-            return jsonify({'status':'failed','result':'unable to validate user. Please try again!'})
+            return "false"
 
     def getUserInfo(self, userName):
         data = mongo.user
@@ -148,3 +174,19 @@ class DatabaseManager:
         for q in data.find(query):
             output.append({'username':q['username'],'status':q['status'],'position':q['position'],'name':q['name']})
         return jsonify({'status':'success', 'result':output})
+
+    def updatePassword(self, username, password, newPassword):
+        data = mongo.user
+        pwd = password + username
+        currTime = datetime.now()
+        encpassword = hashlib.md5(pwd.encode('utf-8')).hexdigest()
+        if data.find_one({'username': username, 'password':encpassword, 'status':'active'}):
+            newPwd = newPassword + username
+            encNewPwd = hashlib.md5(newPwd.encode('utf-8')).hexdigest()
+            update_id = data.update({"username":username}, {'$set': {"password":encNewPwd, "date_updated": currTime}})
+            if update_id:
+                return jsonify({'status':'success', 'result':'updated password'})
+            else:
+                return jsonify({'status':'failed','result':'failed to update password'})
+        else:
+            return jsonify({'status':'failed','result':'unable to validate user. Please try again!'})

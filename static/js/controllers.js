@@ -3,11 +3,31 @@
 /* Controllers */
 
 function LoginController($scope, $http) {
+    $scope.login = function () {
+        var data = {"username":$scope.username, "password":$scope.password};
+        $http({
+            method: "POST",
+            url: "/validateUser",
+            data: data
+        }).then(successCallback, errorCallback);
 
+        function successCallback(response){
+            if(response == "failed"){
+                console.log("FAILED");
+            }else{
+                console.log(response);
+            }
+        }
+
+        function errorCallback(error){
+            //error code
+            console.log("failed");
+        }
+    };
 }
 
 function ManageEventsController($scope, $http) {
-    $scope.events = {};
+    $scope.events = [];
 
     $scope.myDeviceId = "";
 
@@ -31,6 +51,31 @@ function ManageEventsController($scope, $http) {
         "changedBy": $scope.changedBy,
         "event_type": $scope.eventType
     };
+
+    $scope.loadEventTypes = function () {
+        $scope.eventTypes = [];
+        var data = {};
+        $http({
+            method: "POST",
+            url: "/getEventTypes",
+            data: data
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            var eventTypes = response.data.result;
+            for(var i = 0; i < eventTypes.length; i++){
+                var type = eventTypes[i].split("#")[0];
+                $scope.eventTypes.push(type);
+                console.log(type);
+            }
+            console.log($scope.eventTypes);
+        }
+
+        function errorCallback(error){
+            //error code
+        }
+    };
+
 
     $scope.loadEvents = function () {
         $scope.pageLoading = true;
@@ -71,6 +116,7 @@ function ManageEventsController($scope, $http) {
     };
 
     $scope.loadEvents();
+    $scope.loadEventTypes();
 
     $scope.search = function () {
         $scope.loadEvents();

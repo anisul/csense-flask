@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template ,session, escape, request, Response
 from flask import url_for, redirect, send_from_directory
 from flask import send_file, make_response, abort
 
@@ -8,6 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
 from manager import DatabaseManager
 
 app = Flask(__name__)
+app.secret_key="cSensing_app"
 
 app.url_map.strict_slashes = False
 
@@ -27,6 +28,11 @@ def basic_pages(**kwargs):
 def rest_device_page(**kwargs):
     return make_response(open('templates/index.html').read())
 # routing for REST alike pages (pass routing onto the Angular app)
+
+@app.route('/getEventTypes', methods=['POST'])
+def get_event_types():
+    return db.getEventTypes(), 200, {'Content-Type': 'application/json'}
+
 
 @app.route('/getEvent', methods=['POST'])
 def get_Event():
@@ -120,7 +126,12 @@ def validate_User():
     username = request.json['username']
     password = request.json['password']
     if username != None and password != None:
-        return db.validateUser(username, password), 200, {'Content-Type': 'application/json'}
+        checkValidity = db.validateUser(username, password)
+        if checkValidity == "true":
+            session['username'] = username
+            return redirect(url_for('basic_pages'))
+        else:
+            return "failed", 200, {'Content-Type':'application/json'}
     else:
         return {"status":"Failed to validate user as data is incomplete!"}
 
@@ -129,6 +140,17 @@ def get_user():
     username = request.json['username']
     if username != None and password != None:
         return db.getUserInfo(username), 200, {'Content-Type': 'application/json'}
+    else:
+        return {"status":"Failed to validate user as data is incomplete!"}
+
+
+@app.route('/updatePassword', methods=['POST'])
+def update_password():
+    username = request.json['username']
+    password = request.json['password']
+    newPassword = request.json['newPassword']
+    if username != None and password != None:
+        return db.updatePassword(username, password, newPassword), 200, {'Content-Type': 'application/json'}
     else:
         return {"status":"Failed to validate user as data is incomplete!"}
 

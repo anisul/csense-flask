@@ -17,12 +17,9 @@
 
                             <div class="form-group">
                                 <label class="filter-col" for="eventType">Event Type:</label>
-                                <select id="eventType" class="form-control">
-                                    <option>Smell</option>
-                                    <option>Noise</option>
-                                    <option>Algae</option>
-                                    <option>Lake</option>
-                                    <option>Alien Species</option>
+                                <select id="eventType" ng-model = "eventType" class="form-control">
+                                    <option selected>Select an option</option>
+                                    <option ng-repeat="eventType in eventTypes">{{eventType}}</option>
                                 </select>
                             </div> <!-- form group [order by] -->
                             <div class="form-group pull-right">
@@ -60,8 +57,11 @@
             <tr ng-repeat="event in events">
                 <td>{{event.event_id}}</td>
                 <td>{{event.latitude}}, {{event.longitude}}</td>
-                <td></td>
-                <td></td>
+                <td>
+                    <div ng-show="event.event_status == 'new'">Active</div>
+                    <div class="text-capitalize" ng-show="event.event_status != 'new'">{{event.event_status}}</div>
+                </td>
+                <td>{{event.event_type}}</td>
                 <td>{{event.event_date_time}}</td>
                 <td><a href="/manage-event/{{event.event_id}}" class="btn btn-default pull-right">Details</a></td>
                 <td><a href="#" class="btn btn-primary">Resolve</a></td>

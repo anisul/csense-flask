@@ -15,7 +15,7 @@
     </div>
     <div class="row">
         <div class="col-md-9 cs-map-container no-padding">
-            <ng-map id="map" zoom="10" center="{{center}}" zoom-to-include-markers="true" default-style="false">
+            <ng-map id="map" zoom="10" zoom-to-include-markers="true" default-style="false">
                 <marker ng-repeat="event in events"
                         position="{{event.pos}}"></marker>
             </ng-map>
