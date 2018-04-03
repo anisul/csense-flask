@@ -195,7 +195,25 @@ function ManageEventController($scope, $http, $routeParams, $location, $timeout)
 }
 
 function UsersController($scope, $http) {
+    var data = {};
+    $scope.users = [];
+    $scope.pageLoading = false;
 
+    $scope.loadUsers = function () {
+        $scope.pageLoading = true;
+        $http({
+            method: "POST",
+            url: "/getUsers",
+            data: data
+        }).then(function successCallback(response) {
+            $scope.users = response.data.result;
+            $scope.pageLoading = false;
+        },function errorCallback(response) {
+            //error code
+        });
+    };
+
+    $scope.loadUsers();
 }
 
 function IndexController($scope, $http, $timeout) {

@@ -20,6 +20,7 @@ db = DatabaseManager()
 @app.route('/manage-events')
 @app.route('/login')
 @app.route('/lost-report')
+@app.route('/users')
 def basic_pages(**kwargs):
     return make_response(open('templates/index.html').read())
 # routing for basic pages (pass routing onto the Angular app)
@@ -153,6 +154,10 @@ def update_password():
         return db.updatePassword(username, password, newPassword), 200, {'Content-Type': 'application/json'}
     else:
         return {"status":"Failed to validate user as data is incomplete!"}
+
+@app.route('/getUsers', methods=['POST'])
+def get_users():
+    return db.getUsers(), 200, {'Content-Type': 'application/json'}
 
 if __name__ == "__main__":
     app.run()

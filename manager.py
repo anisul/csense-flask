@@ -190,3 +190,10 @@ class DatabaseManager:
                 return jsonify({'status':'failed','result':'failed to update password'})
         else:
             return jsonify({'status':'failed','result':'unable to validate user. Please try again!'})
+
+    def getUsers(self):
+        data = mongo.user
+        output = []
+        for q in data.find({}):
+            output.append({"username":q['username'], "name":q['name'],"position":q['position'],'date_created':q['date_created'],'status':q['status']})
+        return jsonify({'status':'success','result':output})
