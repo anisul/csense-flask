@@ -461,3 +461,55 @@ function DeviceDetailController($scope, $http, $routeParams, $location, $window)
         $window.history.back();
     }
 }
+
+function LostReportController($scope, $http, $location, $window) {
+    $scope.alerts = {};
+
+    $scope.report = function () {
+        $scope.alerts.length = 0;
+
+        if ($scope.deviceId) {
+            var data = {
+                "device_id" : $scope.id,
+                "status": ""
+            };
+            $http({
+                method: "POST",
+                url: "/getDevice",
+                data: data
+            }).then(function successCallback(response) {
+                $scope.device = response.data.result[0];
+
+                if ($scope.device) {
+                    var data = {
+                        "device_id" : $scope.deviceId,
+                        "status": "Lost",
+                        "device_mac": $scope.device.device_mac
+                    };
+
+                    $http({
+                        method: "POST",
+                        url: "/updateDevice",
+                        data: data
+                    }).then(function successCallback(response) {
+                        $window.history.back();
+                    },function errorCallback(response) {
+                        //error code
+                    });
+                } else {
+                    $scope.alerts.push("No Device Found Named - " + $scope.deviceId);
+                }
+
+            },function errorCallback(response) {
+                //error code
+            });
+        }
+
+
+    };
+
+    $scope.back = function () {
+        $scope.device = {};
+        $window.history.back();
+    }
+}

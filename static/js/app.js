@@ -43,6 +43,10 @@ app.config(function ($routeProvider, $locationProvider) {
         .when('/device-detail/:id', {
             templateUrl: 'static/partials/device-detail.html',
             controller: DeviceDetailController
+        })
+        .when('/lost-report', {
+            templateUrl: 'static/partials/lost-report.html',
+            controller: LostReportController
         });
 
     $locationProvider.html5Mode({
