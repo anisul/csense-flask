@@ -1,8 +1,7 @@
 'use strict';
 
-var app = angular.module('CsenseFlask', ['csenseFlaskServices', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
-
-app.config(function ($routeProvider, $locationProvider) {
+angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']).
+config(function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'static/partials/landing.html',

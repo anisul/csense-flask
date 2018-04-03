@@ -63,7 +63,7 @@
                     <div class="text-capitalize" ng-show="event.event_status != 'new'">{{event.event_status}}</div>
                 </td>
                 <td>{{event.event_type}}</td>
-                <td>{{event.event_date_time}}</td>
+                <td>{{event.event_date_time | readableDate}}</td>
                 <td><a href="/manage-event/{{event.event_id}}" class="btn btn-default pull-right">Details</a></td>
                 <td><a href="#" class="btn btn-primary">Resolve</a></td>
             </tr>

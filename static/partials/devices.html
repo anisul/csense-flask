@@ -28,7 +28,7 @@
                 <tr ng-repeat="device in devices">
                     <td>{{device.deviceId}}</td>
                     <td>{{device.device_mac}}</td>
-                    <td>{{device.status}}</td>
+                    <td>{{device.status | title}}</td>
                     <th><a href="/device-detail/{{device.deviceId}}" title="view"><span class="glyphicon glyphicon-eye-open"></span></a></th>
                     <td><a href="/device/{{device.deviceId}}" title="edit"><span class="glyphicon glyphicon-edit"></span></a></td>
                 </tr>
