@@ -399,12 +399,16 @@ function DevicesController($scope, $http, $location) {
     $scope.deviceId = ""; //for fetching all devices
     $scope.deviceStatus = "";
 
+    $scope.pageLoading = false;
+
     var data = {
         "device_id" : $scope.deviceId,
         "status": $scope.deviceStatus
     };
 
     $scope.loadDevices = function () {
+        $scope.pageLoading = true;
+
         var data = {};
 
         data.device_id = $scope.deviceId;
@@ -418,6 +422,7 @@ function DevicesController($scope, $http, $location) {
 
         function successCallback(response){
             $scope.devices = response.data.result;
+            $scope.pageLoading = false;
         }
 
         function errorCallback(error){

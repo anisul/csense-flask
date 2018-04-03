@@ -35,4 +35,8 @@
             </tbody>
         </table>
     </div>
+    <div class="container-fluid">
+        <div ng-show="pageLoading" class="alert alert-info" role="alert">Loading Devices....</div>
+        <div ng-show="devices.length == 0 && !pageLoading" class="alert alert-info" role="alert">No Result Found.</div>
+    </div>
 </div>
