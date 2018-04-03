@@ -118,7 +118,7 @@ function ManageEventsController($scope, $http) {
     $scope.loadEvents();
     $scope.loadEventTypes();
 
-    $scope.search = function () {
+    $scope.filter = function () {
         $scope.loadEvents();
     };
 }
@@ -509,14 +509,16 @@ function DeviceDetailController($scope, $http, $routeParams, $location, $window)
 }
 
 function LostReportController($scope, $http, $location, $window) {
-    $scope.alerts = {};
+    $scope.alerts = [];
+    $scope.reportSent = false;
 
     $scope.report = function () {
+        $scope.reportSent = false;
         $scope.alerts.length = 0;
 
         if ($scope.deviceId) {
             var data = {
-                "device_id" : $scope.id,
+                "device_id" : $scope.deviceId,
                 "status": ""
             };
             $http({
@@ -538,7 +540,8 @@ function LostReportController($scope, $http, $location, $window) {
                         url: "/updateDevice",
                         data: data
                     }).then(function successCallback(response) {
-                        $window.history.back();
+                        $scope.deviceId = "";
+                        $scope.reportSent = true;
                     },function errorCallback(response) {
                         //error code
                     });

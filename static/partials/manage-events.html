@@ -6,20 +6,21 @@
             <div id="filter-panel" class="filter-panel">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form class="form-inline" role="form">
+                        <form class="form-inline" role="form" ng-submit="filter()">
                             <div class="form-group" style="margin-right: 20px;">
                                 <label class="filter-col" for="eventStatus">Event Status:</label>
-                                <select id="eventStatus" class="form-control">
-                                    <option>Active</option>
-                                    <option>Resolved</option>
+                                <select id="eventStatus" ng-model="status" class="form-control">
+                                    <option value=""></option>
+                                    <option value="new">Active</option>
+                                    <option value="resolved">Resolved</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label class="filter-col" for="eventType">Event Type:</label>
                                 <select id="eventType" ng-model = "eventType" class="form-control">
-                                    <option selected>Select an option</option>
-                                    <option ng-repeat="eventType in eventTypes">{{eventType}}</option>
+                                    <option value=""></option>
+                                    <option ng-model="eventType" ng-repeat="eventType in eventTypes">{{eventType}}</option>
                                 </select>
                             </div> <!-- form group [order by] -->
                             <div class="form-group pull-right">
@@ -68,5 +69,9 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    <div class="container-fluid">
+        <div ng-show="pageLoading" class="alert alert-info" role="alert">Loading Events....</div>
+        <div ng-show="events.length == 0 && !pageLoading" class="alert alert-info" role="alert">No Result Found.</div>
     </div>
 </div>
