@@ -21,6 +21,7 @@ db = DatabaseManager()
 @app.route('/login')
 @app.route('/lost-report')
 @app.route('/users')
+@app.route('/events-mb')
 def basic_pages(**kwargs):
     return make_response(open('templates/index.html').read())
 # routing for basic pages (pass routing onto the Angular app)

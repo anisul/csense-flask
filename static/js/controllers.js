@@ -114,7 +114,6 @@ function ManageEventsController($scope, $http, $cookies) {
 
     $scope.loadEvents();
     $scope.loadEventTypes();
-    console.log("hello " + $cookies.username);
 
     $scope.filter = function () {
         $scope.loadEvents();
@@ -212,6 +211,83 @@ function UsersController($scope, $http) {
     };
 
     $scope.loadUsers();
+}
+
+function EventsMbController($scope, $http, $timeout) {
+    $scope.events = {};
+
+    $scope.myDeviceId = "";
+
+    $scope.deviceId = "";
+    $scope.eventId = "";
+    $scope.fromDate = "";
+    $scope.toDate = "";
+    $scope.status = "";
+    $scope.changedDate = "";
+    $scope.changedBy = "";
+    $scope.eventType = "";
+
+    $scope.pageLoading = false;
+
+    var data = {
+        "device_id" : $scope.deviceId,
+        "event_id": $scope.eventId,
+        "fromDate": $scope.fromDate,
+        "toDate": $scope.toDate,
+        "status": $scope.status,
+        "changedDate": $scope.changedDate,
+        "changedBy": $scope.changedBy,
+        "event_type": $scope.eventType
+    };
+
+    $scope.loadEvents = function () {
+        $scope.pageLoading = true;
+
+        var data = {};
+
+        data.device_id = $scope.deviceId;
+        data.event_id = $scope.eventId;
+        data.fromDate = $scope.fromDate;
+        data.toDate = $scope.toDate;
+        data.status = $scope.status;
+        data.changedDate = $scope.changedDate;
+        data.changedBy = $scope.changedBy;
+        data.event_type = $scope.eventType;
+
+        $http({
+            method: "POST",
+            url: "/getEvent",
+            data: data
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            $scope.events = response.data.result;
+
+            for (var i = 0; i < $scope.events.length; i++) {
+                var position = [];
+                position.push($scope.events[i].latitude);
+                position.push($scope.events[i].longitude);
+                $scope.events[i].pos = position;
+            }
+
+            $scope.pageLoading = false;
+        }
+
+        function errorCallback(error){
+            //error code
+        }
+    };
+
+    $scope.loadEvents();
+
+    $scope.search = function () {
+        $scope.loadEvents();
+    };
+
+    $scope.searchMyEvent = function () {
+        $scope.deviceId = $scope.myDeviceId;
+        $scope.loadEvents();
+    };
 }
 
 function IndexController($scope, $http, $timeout) {

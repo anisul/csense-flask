@@ -46,6 +46,45 @@
 
 	<body ng-app="CsenseFlask" ng-controller="MainController">
 		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Citizen Sensing</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="/about">About</a></li>
+						<li><a href="/help">Help</a></li>
+						<li class="hidden-lg hidden-md"><a href="/events-mb">Events</a></li>
+						<li class="dropdown" ng-show="admin.loggedIn == 'true'">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/devices">Manage Devices</a></li>
+								<li><a href="/manage-events">Manage Events</a></li>
+								<li><a href="/users">Users</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="/lost-report">Lost Report</a></li>
+						<li><a ng-show="admin.loggedIn == 'false'" href="/login">Login</a></li>
+						<li><a ng-show="admin.loggedIn == 'true'" href="#" ng-click="logout()">Logout</a></li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
+
+		<!--<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="col-md-12 col-xs-12 col-sm-12">
 				<div class="navbar-header">
 					<a class="navbar-brand" href="/">Citizen Sensing</a>
@@ -71,7 +110,7 @@
 					</ul>
 				</div>
 			</div>
-		</nav>
+		</nav>-->
 
 		<br>
 		<br>

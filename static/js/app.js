@@ -46,6 +46,10 @@ app.config(function ($routeProvider, $locationProvider) {
         .when('/lost-report', {
             templateUrl: 'static/partials/lost-report.html',
             controller: LostReportController
+        })
+        .when('/events-mb', {
+            templateUrl: 'static/partials/events-mb.html',
+            controller: EventsMbController
         });
 
     $locationProvider.html5Mode({
@@ -54,10 +58,10 @@ app.config(function ($routeProvider, $locationProvider) {
     });
 });
 
-app.controller('MainController', function ($scope, $http, $location, $cookies) {
+app.controller('MainController', function ($scope, $http, $location) {
     $scope.admin = {};
     $scope.admin.loggedIn = "false";
-    var cookie = $cookies.username;
+
     $scope.logout = function () {
         $http({
             method: "GET",
