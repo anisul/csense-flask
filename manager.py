@@ -14,7 +14,7 @@ MONGO_USER = "root"
 MONGO_PASS = "root"
 connection = MongoClient(MONGO_HOST, MONGO_PORT)
 mongo = connection[MONGO_DB]
-currTime = datetime.today() + timedelta(hours=3)
+currTime = datetime.today() - timedelta(hours=3)
 
 class DatabaseManager:
 

@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-function LoginController($scope, $http, $location) {
+function LoginController($scope, $http, $location, $cookies) {
     $scope.login = function () {
         var data = {"username":$scope.username, "password":$scope.password};
         $http({
@@ -12,8 +12,8 @@ function LoginController($scope, $http, $location) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $cookies.username = $scope.username;
             $scope.admin.loggedIn = "true";
-
             $location.path('/manage-events');
         }
 
@@ -24,7 +24,7 @@ function LoginController($scope, $http, $location) {
     };
 }
 
-function ManageEventsController($scope, $http) {
+function ManageEventsController($scope, $http, $cookies) {
     $scope.events = [];
 
     $scope.myDeviceId = "";
@@ -64,7 +64,6 @@ function ManageEventsController($scope, $http) {
             for(var i = 0; i < eventTypes.length; i++){
                 var type = eventTypes[i].split("#")[0];
                 $scope.eventTypes.push(type);
-                console.log(type);
             }
             console.log($scope.eventTypes);
         }
@@ -115,6 +114,7 @@ function ManageEventsController($scope, $http) {
 
     $scope.loadEvents();
     $scope.loadEventTypes();
+    console.log("hello " + $cookies.username);
 
     $scope.filter = function () {
         $scope.loadEvents();

@@ -26,6 +26,7 @@
 		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
 		<script src="/static/lib/angular/angular-resource.js"></script>
 		<script src="/static/lib/angular/angular-route.js"></script>
+		<script src="/static/lib/angular-cookies.min.js"></script>
 
 		<script src="/static/js/app.js"></script>
 		<script src="/static/js/controllers.js"></script>
@@ -65,7 +66,8 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li><a href="/lost-report">Lost Report</a></li>
-						<li><a href="/login">Login</a></li>
+						<li><a ng-show="admin.loggedIn == 'false'" href="/login">Login</a></li>
+						<li><a ng-show="admin.loggedIn == 'true'" href="#" ng-click="logout()">Logout</a></li>
 					</ul>
 				</div>
 			</div>

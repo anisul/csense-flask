@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
+var app = angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngCookies', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
@@ -54,9 +54,26 @@ app.config(function ($routeProvider, $locationProvider) {
     });
 });
 
-app.controller('MainController', function ($scope) {
+app.controller('MainController', function ($scope, $http, $location, $cookies) {
     $scope.admin = {};
     $scope.admin.loggedIn = "false";
+    var cookie = $cookies.username;
+    $scope.logout = function () {
+        $http({
+            method: "GET",
+            url: "/logout"
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            $scope.admin.loggedIn = "false";
+            $location.path('/');
+        }
+
+        function errorCallback(error){
+            //error code
+            console.log("log out failed");
+        }
+    };
 });
 
 /*
