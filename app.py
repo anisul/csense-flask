@@ -81,6 +81,12 @@ def update_Event():
     updated_by = request.json['updated_by']
     return db.updateEvent(event_id, status, updated_by), 200, {'Content-Type': 'application/json'}
 
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it is there
+    session.pop('username', None)
+    return redirect(url_for('basic_pages'))
+
 @app.route('/getDevice', methods=['POST'])
 def get_device():
     deviceName = request.json['device_id']

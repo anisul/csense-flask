@@ -14,6 +14,7 @@ MONGO_USER = "root"
 MONGO_PASS = "root"
 connection = MongoClient(MONGO_HOST, MONGO_PORT)
 mongo = connection[MONGO_DB]
+currTime = datetime.today() + timedelta(hours=3)
 
 class DatabaseManager:
 
@@ -44,28 +45,13 @@ class DatabaseManager:
             query['event_date_updated'] = changeDate
         if changeBy != "all" :
             query['event_updated_by'] = changeBy
-        for q in data.find(query):
+        for q in data.find(query).sort("event_date_time",pymongo.DESCENDING):
             output.append({'device_id':q['event_device_id'],'event_type':q['event_type'],'event_status':q['event_status'],'latitude':q['event_latitude'],'longitude':q['event_longitude'],'event_date_time':q['event_date_time'],'event_id':q['event_id']})
         return jsonify({'status':'success','result':output, 'query':query})
 
-    def saveEvent(self, device_id, latitude, longitude, value):
-        data = mongo.event
-        #currTime = datetime.now()
-        currTime = datetime.today() + timedelta(hours=3)
-        device = mongo.device
-        unique_id = str(uuid.uuid4())
-        check_device = device.find_one({'device_mac':device_id})
-        if check_device['status'] == 'active' :
-            save_id = data.insert({'event_id':unique_id,'event_device_id': device_id, 'event_latitude':latitude, 'event_longitude' : longitude, 'event_type' : value, 'event_date_time':currTime,'event_status':'new','event_updated_by':'','event_date_updated':''})
-            new_data = data.find_one({'_id' : save_id})
-            output = {'device_id':check_device['status'],'name' : new_data['event_device_id'], 'value':new_data['event_type'],'time':currTime}
-        else:
-            output = {"device_id":"Device not registered or inactive! Please register device and try again."}
-        return jsonify({'status':'success', 'result':output})
-
     def updateEvent(self, event_id, status, updated_by):
         data = mongo.event
-        currTime = datetime.now()
+        #currTime = datetime.now()
         update_id = data.update({"event_id":event_id}, {'$set': {"event_status":status, "event_updated_by":updated_by, "event_date_updated": currTime}})
         new_data = data.find_one({'event_id' : event_id})
         output = {'name' : new_data['event_device_id'], 'value':new_data['event_type']}
@@ -81,7 +67,6 @@ class DatabaseManager:
     def saveEvent(self, device_id, latitude, longitude, value):
         data = mongo.event
         #currTime = datetime.now()
-        currTime = datetime.today() + timedelta(hours=3)
         device = mongo.device
         unique_id = str(uuid.uuid4())
         check_device = device.find_one({'device_mac':device_id})
@@ -104,8 +89,8 @@ class DatabaseManager:
             query['device_id'] = deviceName
         if status != "all" :
             query['status'] = status
-        for q in data.find(query):
-            output.append({'deviceId':q['device_id'],'status':q['status'],'device_mac':q['device_mac']})
+        for q in data.find(query).sort("dateCreated",pymongo.DESCENDING):
+            output.append({'deviceId':q['device_id'],'status':q['status'],'device_mac':q['device_mac'],'dateCreated':q['dateCreated']})
         return jsonify({'status':'success', 'result':output})
 
     def checkDevice(self, deviceMac):
@@ -120,7 +105,7 @@ class DatabaseManager:
 
     def saveDevice(self, deviceId, deviceMac):
         data = mongo.device
-        currTime = datetime.now()
+        #        currTime = datetime.now()
         check_id = data.find_one({"device_mac":deviceMac})
         if check_id:
             output = {'result':'failed to save as device is already registered!'}
@@ -131,7 +116,7 @@ class DatabaseManager:
                 output = {'status':'failed','result':'Please use another device id, '+deviceId+' one is already taken!'}
                 status = {'status':'failed'}
             else:
-                save_id = data.insert({'device_id': deviceId, 'status':'active','device_mac':deviceMac})
+                save_id = data.insert({'device_id': deviceId, 'status':'active','device_mac':deviceMac,'dateCreated':currTime})
                 new_data = data.find_one({'_id' : save_id})
                 output = {'device_id' : new_data['device_id'], 'mac':new_data['device_mac'], 'dateCreated':currTime}
                 status = {'status':'success'}
@@ -139,7 +124,7 @@ class DatabaseManager:
 
     def updateDevice(self, device_id, status):
         data = mongo.device
-        currTime = datetime.now()
+        #currTime = datetime.now()
         if data.find_one({'device_id' : device_id}):
             update_id = data.update({"device_id":device_id}, {'$set': {"status":status, "date_updated": currTime}})
             new_data = data.find_one({'device_id' : device_id})
@@ -152,10 +137,13 @@ class DatabaseManager:
         data = mongo.user
         pwd = password + username
         encpassword = hashlib.md5(pwd.encode('utf-8')).hexdigest()
-        if data.insert({'username': username, 'password':encpassword,'name':name,'position':position,'status':'active'}):
-            return jsonify({'status':'success', 'result':encpassword})
+        if data.find_one({"username":username}):
+            return jsonify({"status":"failed","result":"username already exists"})
         else:
-            return jsonify({'status':'failed','result':'unable to save user. Please try again!'})
+            if data.insert({'username': username, 'password':encpassword,'name':name,'position':position,'status':'active', "date_created":currTime}):
+                return jsonify({'status':'success', 'result':encpassword})
+            else:
+                return jsonify({'status':'failed','result':'unable to save user. Please try again!'})
 
     def validateUser(self, username, password):
         data = mongo.user
@@ -178,7 +166,7 @@ class DatabaseManager:
     def updatePassword(self, username, password, newPassword):
         data = mongo.user
         pwd = password + username
-        currTime = datetime.now()
+        #currTime = datetime.now()
         encpassword = hashlib.md5(pwd.encode('utf-8')).hexdigest()
         if data.find_one({'username': username, 'password':encpassword, 'status':'active'}):
             newPwd = newPassword + username
