@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-function LoginController($scope, $http) {
+function LoginController($scope, $http, $location) {
     $scope.login = function () {
         var data = {"username":$scope.username, "password":$scope.password};
         $http({
@@ -12,11 +12,9 @@ function LoginController($scope, $http) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
-            if(response == "failed"){
-                console.log("FAILED");
-            }else{
-                console.log(response);
-            }
+            $scope.admin.loggedIn = "true";
+
+            $location.path('/manage-events');
         }
 
         function errorCallback(error){

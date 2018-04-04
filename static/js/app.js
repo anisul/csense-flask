@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']).
-config(function ($routeProvider, $locationProvider) {
+var app = angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
+app.config(function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'static/partials/landing.html',
@@ -52,6 +52,11 @@ config(function ($routeProvider, $locationProvider) {
         enabled: true,
         requireBase: false
     });
+});
+
+app.controller('MainController', function ($scope) {
+    $scope.admin = {};
+    $scope.admin.loggedIn = "false";
 });
 
 /*

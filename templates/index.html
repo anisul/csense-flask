@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en" ng-app="CsenseFlask">
+<html lang="en">
 	<head>
 		<title>Citizen Sensing</title>
 		<base href="/">
@@ -43,7 +43,7 @@
 		<script src="https://rawgit.com/rzajac/angularjs-slider/master/dist/rzslider.js"></script>
 	</head>
 
-	<body>
+	<body ng-app="CsenseFlask" ng-controller="MainController">
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="col-md-12 col-xs-12 col-sm-12">
 				<div class="navbar-header">
@@ -53,7 +53,7 @@
 					<ul class="nav navbar-nav">
 						<li><a href="/about">About</a></li>
 						<li><a href="/help">Help</a></li>
-						<li class="dropdown">
+						<li class="dropdown" ng-show="admin.loggedIn == 'true'">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
 								<span class="caret"></span></a>
 							<ul class="dropdown-menu">
