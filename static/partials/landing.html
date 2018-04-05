@@ -17,7 +17,7 @@
         <div class="col-xs-12 col-md-9 cs-map-container no-padding">
             <ng-map id="map" zoom="10" zoom-to-include-markers="true" default-style="false">
                 <marker ng-repeat="event in events"
-                        position="{{event.pos}}"></marker>
+                        position="{{event.pos}}" icon="{{event.markerIcon}}"></marker>
             </ng-map>
         </div>
 
@@ -56,7 +56,7 @@
                         <div class="event-list-group-wrapper" ng-show="events.length">
                             <div class="list-group">
                                 <a href="#" class="list-group-item" ng-repeat="event in events">
-                                    <h4 class="list-group-item-heading">Event ID: {{$index + 1}}</h4>
+                                    <p class="list-group-item-text">Event Type: {{event.event_type}}</p>
                                     <p class="list-group-item-text">Longitude: {{event.longitude}}</p>
                                     <p class="list-group-item-text">Latitude: {{event.latitude}}</p>
                                     <p class="list-group-item-text text-muted small">{{event.event_date_time}}</p>

@@ -330,6 +330,15 @@ function IndexController($scope, $http, $timeout) {
         data.changedBy = $scope.changedBy;
         data.event_type = $scope.eventType;
 
+        var colorsDynamic = ['ff8a80', //Smell
+                             '880e4f', //Algae
+                             '4a148c', //Noise
+                             '311b92', //Alien species
+                             '3d5afe',  //Lake
+                             '5d4037'  //Others
+        ];
+
+
         $http({
             method: "POST",
             url: "/getEvent",
@@ -338,12 +347,27 @@ function IndexController($scope, $http, $timeout) {
 
         function successCallback(response){
             $scope.events = response.data.result;
+            var markerURL = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|';
 
             for (var i = 0; i < $scope.events.length; i++) {
                 var position = [];
                 position.push($scope.events[i].latitude);
                 position.push($scope.events[i].longitude);
                 $scope.events[i].pos = position;
+
+                if ($scope.events[i].event_type == 'Smell') {
+                    $scope.events[i].markerIcon = markerURL + 'ff8a80';
+                } else if ($scope.events[i].event_type == 'Algae') {
+                    $scope.events[i].markerIcon = markerURL + '880e4f';
+                } else if ($scope.events[i].event_type == 'Noise') {
+                    $scope.events[i].markerIcon = markerURL + '4a148c';
+                } else if ($scope.events[i].event_type == 'Alien species') {
+                    $scope.events[i].markerIcon = markerURL + '311b92';
+                } else if ($scope.events[i].event_type == 'Lake') {
+                    $scope.events[i].markerIcon = markerURL + '3d5afe';
+                } else {
+                    $scope.events[i].markerIcon = markerURL + '5d4037';
+                }
             }
 
             $scope.zoomToIncludeMarkers();
