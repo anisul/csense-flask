@@ -56,7 +56,7 @@
                         <div class="event-list-group-wrapper" ng-show="events.length">
                             <div class="list-group">
                                 <a href="#" class="list-group-item" ng-repeat="event in events">
-                                    <p class="list-group-item-text">Event Type: {{event.event_type}}</p>
+                                    <h5>Event Type: <span class="label label-default" ng-class="event.event_type">{{event.event_type}}</span></h5>
                                     <p class="list-group-item-text">Longitude: {{event.longitude}}</p>
                                     <p class="list-group-item-text">Latitude: {{event.latitude}}</p>
                                     <p class="list-group-item-text text-muted small">{{event.event_date_time}}</p>

@@ -233,3 +233,21 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+
+.Smell {
+    background-color: #ff8a80;
+}
+
+.Algae {
+    background-color: #880e4f;
+}
+
+.Noise {
+    background-color: #4a148c;
+}
+
+.Lake {
+    background-color: #3d5afe;
+}
+
