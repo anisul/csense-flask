@@ -11,6 +11,24 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
+                <div class="row">
+                    <div class="col-md-2 col-md-offset-1">
+                        <h5 style="cursor: pointer"><span ng-click="search('Smell')" class="label label-default" style="background-color: #ff8a80;">Smell</span></h5>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 style="cursor: pointer"><span ng-click="search('Algae')" class="label label-default" style="background-color: #880e4f;">Algae</span></h5>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 style="cursor: pointer"><span ng-click="search('Noise')" class="label label-default" style="background-color: #4a148c;">Noise</span></h5>
+                    </div>
+                    <div class="col-md-2">
+                        <h5 style="cursor: pointer"><span ng-click="search('Lake')" class="label label-default" style="background-color: #3d5afe;">Lake</span></h5>
+                    </div>
+
+                    <div class="col-md-2">
+                        <h5 style="cursor: pointer"><span ng-click="search('')" class="label label-default">All</span></h5>
+                    </div>
+                </div>
                 <!--tab 1-->
                 <div role="tabpanel" class="tab-pane" id="tweets">
                     <div twitter-timeline="978808994465763331" auto-resize="true" css-url="path/to/custom.css" data-tweet-limit="5">Loading tweets...</div>

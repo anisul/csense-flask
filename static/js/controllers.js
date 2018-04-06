@@ -280,7 +280,13 @@ function EventsMbController($scope, $http, $timeout) {
 
     $scope.loadEvents();
 
-    $scope.search = function () {
+    $scope.search = function (eventType) {
+        if (eventType) {
+            $scope.eventType = eventType;
+        } else {
+            $scope.eventType = '';
+        }
+
         $scope.loadEvents();
     };
 
@@ -381,7 +387,13 @@ function IndexController($scope, $http, $timeout) {
 
     $scope.loadEvents();
         
-    $scope.search = function () {
+    $scope.search = function (eventType) {
+        if (eventType) {
+            $scope.eventType = eventType;
+        } else {
+            $scope.eventType = '';
+        }
+
         $scope.loadEvents();
     };
 
