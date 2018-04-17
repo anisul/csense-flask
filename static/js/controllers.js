@@ -2,9 +2,9 @@
 
 /* Controllers */
 
-function LoginController($scope, $http, $location, $cookies) {
+function LoginController($scope, $http, $location, $cookies, $base64) {
     $scope.login = function () {
-        var data = {"username":$scope.username, "password":$scope.password};
+        var data = {"username":$scope.username, "password": $base64.encode($scope.password)};
         $http({
             method: "POST",
             url: "/validateUser",
@@ -12,7 +12,7 @@ function LoginController($scope, $http, $location, $cookies) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
-            $cookies.username = $scope.username;
+            $cookies.put("user","logged");
             $scope.admin.loggedIn = "true";
             $location.path('/manage-events');
         }
@@ -60,6 +60,7 @@ function ManageEventsController($scope, $http, $cookies) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $scope.checkSession();
             var eventTypes = response.data.result;
             for(var i = 0; i < eventTypes.length; i++){
                 var type = eventTypes[i].split("#")[0];
@@ -95,6 +96,7 @@ function ManageEventsController($scope, $http, $cookies) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $scope.checkSession();
             $scope.events = response.data.result;
 
             for (var i = 0; i < $scope.events.length; i++) {
@@ -120,7 +122,7 @@ function ManageEventsController($scope, $http, $cookies) {
     };
 }
 
-function ManageEventController($scope, $http, $routeParams, $location, $timeout) {
+function ManageEventController($scope, $http, $routeParams, $location, $timeout, $window) {
     $scope.deviceId = "";
     $scope.eventId = $routeParams.id;
     $scope.fromDate = "";
@@ -164,6 +166,7 @@ function ManageEventController($scope, $http, $routeParams, $location, $timeout)
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $scope.checkSession();
             $scope.event = response.data.result[0];
 
             var position = [];
@@ -179,6 +182,28 @@ function ManageEventController($scope, $http, $routeParams, $location, $timeout)
             //error code
         }
     }();
+
+    $scope.resolve = function () {
+        var updateData = {
+            "event_id": $scope.event.event_id,
+            "status": "Resolved",
+            "updated_by": ""
+        };
+        $http({
+            method: "POST",
+            url: "/updateEvent",
+            data: updateData
+        }).then(successCallback, errorCallback);
+
+        function successCallback(response){
+            $scope.checkSession();
+            $window.history.back();
+        }
+
+        function errorCallback(error){
+            //error code
+        }
+    };
 
     $scope.zoomToIncludeMarker = function(lat, lng) {
         var bounds = new google.maps.LatLngBounds();
@@ -197,6 +222,7 @@ function UsersController($scope, $http) {
     $scope.pageLoading = false;
 
     $scope.loadUsers = function () {
+        $scope.checkSession();
         $scope.pageLoading = true;
         $http({
             method: "POST",
@@ -261,6 +287,7 @@ function EventsMbController($scope, $http, $timeout) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            //$scope.checkSession();
             $scope.events = response.data.result;
 
             for (var i = 0; i < $scope.events.length; i++) {
@@ -352,6 +379,7 @@ function IndexController($scope, $http, $timeout) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            //$scope.checkSession();
             $scope.events = response.data.result;
             var markerURL = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|';
 
@@ -496,11 +524,11 @@ function IndexController($scope, $http, $timeout) {
 }
 
 function AboutController($scope, $http) {
-
+    //$scope.checkSession();
 }
 
 function HelpController($scope, $http) {
-
+    //$scope.checkSession();
 }
 
 function DevicesController($scope, $http, $location) {
@@ -531,6 +559,7 @@ function DevicesController($scope, $http, $location) {
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $scope.checkSession();
             $scope.devices = response.data.result;
             $scope.pageLoading = false;
         }
@@ -562,6 +591,7 @@ function DeviceController($scope, $http, $routeParams, $location, $window) {
                 url: "/getDevice",
                 data: data
             }).then(function successCallback(response) {
+                $scope.checkSession();
                 $scope.device = response.data.result[0];
             },function errorCallback(response) {
                 //error code
@@ -585,6 +615,7 @@ function DeviceController($scope, $http, $routeParams, $location, $window) {
                     url: "/updateDevice",
                     data: data
                 }).then(function successCallback(response) {
+                    $scope.checkSession();
                     $window.history.back();
                 },function errorCallback(response) {
                     //error code
@@ -595,13 +626,14 @@ function DeviceController($scope, $http, $routeParams, $location, $window) {
                     url: "/saveDevice",
                     data: data
                 }).then(function successCallback(response) {
+                    $scope.checkSession();
                     $window.history.back();
                 },function errorCallback(response) {
                     //error code
                 });
             }
         }
-    }
+    };
 
     $scope.back = function () {
         $scope.device = {};
@@ -625,6 +657,7 @@ function DeviceDetailController($scope, $http, $routeParams, $location, $window)
         }).then(successCallback, errorCallback);
 
         function successCallback(response){
+            $scope.checkSession();
             $scope.device = response.data.result[0];
         }
 
@@ -659,6 +692,7 @@ function LostReportController($scope, $http, $location, $window) {
                 url: "/getDevice",
                 data: data
             }).then(function successCallback(response) {
+                //$scope.checkSession();
                 $scope.device = response.data.result[0];
 
                 if ($scope.device) {

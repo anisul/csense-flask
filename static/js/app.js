@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngCookies', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline']);
+var app = angular.module('CsenseFlask', ['CsenseFlask.filters', 'ngRoute', 'ngCookies', 'ngMap', 'rzModule', 'ui.bootstrap','ngAnimate', 'ngSanitize', 'twitter.timeline', 'ngCookies', 'base64']);
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider
         .when('/', {
@@ -58,9 +58,14 @@ app.config(function ($routeProvider, $locationProvider) {
     });
 });
 
-app.controller('MainController', function ($scope, $http, $location) {
+app.controller('MainController', function ($scope, $http, $location, $cookies) {
     $scope.admin = {};
-    $scope.admin.loggedIn = "false";
+
+    if ($cookies.get("user")) {
+        $scope.admin.loggedIn = "true";
+    } else {
+        $scope.admin.loggedIn = "false";
+    }
 
     $scope.logout = function () {
         $http({
@@ -70,6 +75,7 @@ app.controller('MainController', function ($scope, $http, $location) {
 
         function successCallback(response){
             $scope.admin.loggedIn = "false";
+            $cookies.remove("user");
             $location.path('/');
         }
 
@@ -78,6 +84,15 @@ app.controller('MainController', function ($scope, $http, $location) {
             console.log("log out failed");
         }
     };
+    
+    
+    $scope.checkSession = function () {
+        if ($cookies.get("user")) {
+            $scope.admin.loggedIn = "true";
+        } else {
+            $scope.logout();
+        }
+    }
 });
 
 /*

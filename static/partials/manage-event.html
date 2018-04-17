@@ -23,15 +23,18 @@
                         </tr>
                         <tr>
                             <td>Status</td>
-                            <td></td>
+                            <td>
+                                <div ng-show="event.event_status == 'new'">Active</div>
+                                <div class="text-capitalize" ng-show="event.event_status != 'new'">{{event.event_status}}</div>
+                            </td>
                         </tr>
                         <tr>
                             <td>Type</td>
-                            <td></td>
+                            <td>{{event.event_type}}</td>
                         </tr>
                         </tbody>
                     </table>
-                    <div class="btn btn-primary pull-right" ng-click="resolve()">Resolve</div>
+                    <div ng-hide="event.event_status != 'new'" class="btn btn-primary pull-right" ng-click="resolve()">Resolve</div>
                 </div>
             </div>
         </div>
