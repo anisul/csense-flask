@@ -1,18 +1,27 @@
 <div class="container-fluid">
-    <div class="col-md-2 col-md-offset-1 col-xs-4 col-xs-offset-1">
+    <!--<div class="col-md-2 col-md-offset-1 col-xs-4 col-xs-offset-1">
         <div class="cs-overlap-slider-container">
             <div class="cs-slider">
                 <rzslider rz-slider-model="selectorSlider.value" rz-slider-options="selectorSlider.options" select="refreshSlider()"></rzslider>
             </div>
         </div>
-    </div>
-    <div class="col-md-4 col-md-offset-1 col-xs-6 col-xs-offset-1">
+    </div>-->
+    <div class="col-md-7 col-md-offset-1 col-xs-10 col-xs-offset-1">
         <div class="cs-overlap-slider-container">
-            <div class="cs-slider">
-                <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+            <div class="col-md-3 col-xs-4">
+                <div class="cs-slider">
+                    <rzslider rz-slider-model="selectorSlider.value" rz-slider-options="selectorSlider.options" select="refreshSlider()"></rzslider>
+                </div>
+            </div>
+
+            <div class="col-md-9 col-xs-8">
+                <div class="cs-slider">
+                    <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-xs-12 col-md-9 cs-map-container no-padding">
             <ng-map id="map" zoom="10" zoom-to-include-markers="true" default-style="false">
