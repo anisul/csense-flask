@@ -325,6 +325,7 @@ function EventsMbController($scope, $http, $timeout) {
 
 function IndexController($scope, $http, $timeout) {
     $scope.events = {};
+    $scope.eventTypeSearchText = '';
 
     $scope.myDeviceId = "";
 
@@ -423,6 +424,7 @@ function IndexController($scope, $http, $timeout) {
         }
 
         $scope.loadEvents();
+        $scope.eventTypeSearchText = 'Search result for type ' + '\'' +eventType  + '\' :';
     };
 
     $scope.zoomToIncludeMarkers = function() {

@@ -80,6 +80,9 @@
                             <button type="submit" class="btn btn-default pull-right">Search</button>
                         </form>
 
+                        <div class="search-result-info-container" ng-show="eventTypeSearchText">
+                            <div class="alert alert-info" role="alert" style="text-align: center">{{eventTypeSearchText}}</div>
+                        </div>
                         <div class="event-list-group-wrapper" ng-show="events.length">
                             <div class="list-group">
                                 <a href="#" class="list-group-item" ng-repeat="event in events">

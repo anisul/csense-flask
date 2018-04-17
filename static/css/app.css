@@ -193,7 +193,7 @@
 
 
 .event-list-group-wrapper {
-    max-height: 65vh;
+    max-height: 62vh;
     overflow-y: scroll;
     overflow-x: hidden;
     margin-top: 15px;
@@ -249,5 +249,9 @@
 
 .Lake {
     background-color: #3d5afe;
+}
+
+.search-result-info-container {
+    margin-top: 10px;
 }
 
