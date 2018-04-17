@@ -241,6 +241,7 @@ function UsersController($scope, $http) {
 
 function EventsMbController($scope, $http, $timeout) {
     $scope.events = {};
+    $scope.eventTypeSearchText = '';
 
     $scope.myDeviceId = "";
 
@@ -310,7 +311,9 @@ function EventsMbController($scope, $http, $timeout) {
     $scope.search = function (eventType) {
         if (eventType) {
             $scope.eventType = eventType;
+            $scope.eventTypeSearchText = 'Search result for type ' + '\'' +eventType  + '\' :';
         } else {
+            $scope.eventTypeSearchText = 'Search result for all types:';
             $scope.eventType = '';
         }
 
